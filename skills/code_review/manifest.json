@@ -1,17 +1,22 @@
 {
   "schema_version": "1.0.0",
   "id": "code_review",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "name": "Code Review",
   "display_name": "Code Review",
   "icon_svg": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor'><path d='M9 12l2 2 4-4'/></svg>",
   "brand_color": "#8B5CF6",
-
   "description": "Systematic code review with router-based sub-skill selection.",
   "short_description": "Route to the right review aspect — correctness, security, errors, or maintainability.",
   "store_description": "A router-based code review skill. The parent routes to one of four specialized sub-skills based on the user's request: correctness analysis (bugs and logic), security audit (injection, auth, secrets), error handling review (exceptions, retries, fallbacks), and maintainability review (complexity, duplication, naming). Every finding is backed by a quoted excerpt and a concrete fix recommendation.",
-
-  "tags": ["review", "audit", "security", "quality", "code", "router"],
+  "tags": [
+    "review",
+    "audit",
+    "security",
+    "quality",
+    "code",
+    "router"
+  ],
   "author": {
     "name": "PELDRUN Team",
     "url": "https://peldrun.ai"
@@ -20,58 +25,83 @@
   "trust": "verified",
   "license": "MIT",
   "homepage": "https://peldrun.ai/skills/code_review",
-
   "release_date": "2026-11-08",
   "stability": "stable",
-
   "capabilities": {
     "chat_invocable": true,
     "agent_assignable": true,
     "workflow_node": false
   },
-
   "execution": {
     "type": "instructions",
     "instructions_file": "SKILL.md"
   },
-
   "sub_skills": [
     {
       "id": "correctness_analysis",
       "description": "Identify logic bugs, edge cases, off-by-one errors, and incorrect control flow with cited evidence.",
-      "triggers": ["bug", "logic", "off-by-one", "null", "undefined", "edge case", "crash", "correctness"],
+      "triggers": [
+        "bug",
+        "logic",
+        "off-by-one",
+        "null",
+        "undefined",
+        "edge case",
+        "crash",
+        "correctness"
+      ],
       "instructions_file": "sub_skills/correctness_analysis/SKILL.md"
     },
     {
       "id": "security_audit",
       "description": "Identify security vulnerabilities — injection, secrets, auth bypass, unsafe deserialization.",
-      "triggers": ["security", "injection", "xss", "sql", "auth", "token", "secret", "vulnerability"],
+      "triggers": [
+        "security",
+        "injection",
+        "xss",
+        "sql",
+        "auth",
+        "token",
+        "secret",
+        "vulnerability"
+      ],
       "instructions_file": "sub_skills/security_audit/SKILL.md"
     },
     {
       "id": "error_handling_review",
       "description": "Review exception hierarchies, retry logic, fallbacks, and error propagation for robustness.",
-      "triggers": ["exception", "error", "try", "catch", "retry", "fallback", "logging"],
+      "triggers": [
+        "exception",
+        "error",
+        "try",
+        "catch",
+        "retry",
+        "fallback",
+        "logging"
+      ],
       "instructions_file": "sub_skills/error_handling_review/SKILL.md"
     },
     {
       "id": "maintainability_review",
       "description": "Review code for clarity, coupling, duplication, naming, and future-change cost.",
-      "triggers": ["refactor", "complexity", "naming", "duplication", "maintainability", "readability"],
+      "triggers": [
+        "refactor",
+        "complexity",
+        "naming",
+        "duplication",
+        "maintainability",
+        "readability"
+      ],
       "instructions_file": "sub_skills/maintainability_review/SKILL.md"
     }
   ],
-
   "compatibility": {
     "peldrun_min_version": "0.2.0"
   },
-
   "user_editable": true,
-
   "limits": {
     "max_instructions_bytes": 262144
   },
-
   "examples": [
     {
       "description": "Security-focused review",
