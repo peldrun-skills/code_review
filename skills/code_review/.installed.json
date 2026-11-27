@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "skill_id": "code_review",
+  "version": "1.0.0",
+  "name": "Code Review",
+  "description": "Systematic code review for bugs, security issues, and maintainability problems.",
+  "content_hash": "sha256:50699aeb7c6c84ce",
+  "installed_at": "2026-10-31T19:27:18.222853+00:00",
+  "source_filename": "code-review.zip",
+  "size_bytes": 3743,
+  "file_count": 3,
+  "original_id": "code_review"
+}
