@@ -1,89 +1,284 @@
 {
-  "schema_version": "1.0.0",
-  "id": "code_review",
-  "version": "2.0.0",
-  "name": "Code Review",
-  "display_name": "Code Review",
-  "icon_svg": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor'><path d='M9 12l2 2 4-4'/></svg>",
-  "brand_color": "#8B5CF6",
-
-  "description": "Systematic code review with router-based sub-skill selection.",
-  "short_description": "Route to the right review aspect — correctness, security, errors, or maintainability.",
-  "store_description": "A router-based code review skill. The parent routes to one of four specialized sub-skills based on the user's request: correctness analysis (bugs and logic), security audit (injection, auth, secrets), error handling review (exceptions, retries, fallbacks), and maintainability review (complexity, duplication, naming). Every finding is backed by a quoted excerpt and a concrete fix recommendation.",
-
-  "tags": ["review", "audit", "security", "quality", "code", "router"],
-  "author": {
-    "name": "PELDRUN Team",
-    "url": "https://peldrun.ai"
-  },
-  "publisher_id": "org.peldrun.official",
-  "trust": "verified",
-  "license": "MIT",
-  "homepage": "https://peldrun.ai/skills/code_review",
-
-  "release_date": "2026-11-08",
-  "stability": "stable",
-
-  "capabilities": {
-    "chat_invocable": true,
-    "agent_assignable": true,
-    "workflow_node": false
-  },
-
-  "execution": {
-    "type": "instructions",
-    "instructions_file": "SKILL.md"
-  },
-
-  "sub_skills": [
-    {
-      "id": "correctness_analysis",
-      "description": "Identify logic bugs, edge cases, off-by-one errors, and incorrect control flow with cited evidence.",
-      "triggers": ["bug", "logic", "off-by-one", "null", "undefined", "edge case", "crash", "correctness"],
-      "instructions_file": "sub_skills/correctness_analysis/SKILL.md"
-    },
-    {
-      "id": "security_audit",
-      "description": "Identify security vulnerabilities — injection, secrets, auth bypass, unsafe deserialization.",
-      "triggers": ["security", "injection", "xss", "sql", "auth", "token", "secret", "vulnerability"],
-      "instructions_file": "sub_skills/security_audit/SKILL.md"
-    },
-    {
-      "id": "error_handling_review",
-      "description": "Review exception hierarchies, retry logic, fallbacks, and error propagation for robustness.",
-      "triggers": ["exception", "error", "try", "catch", "retry", "fallback", "logging"],
-      "instructions_file": "sub_skills/error_handling_review/SKILL.md"
-    },
-    {
-      "id": "maintainability_review",
-      "description": "Review code for clarity, coupling, duplication, naming, and future-change cost.",
-      "triggers": ["refactor", "complexity", "naming", "duplication", "maintainability", "readability"],
-      "instructions_file": "sub_skills/maintainability_review/SKILL.md"
-    }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://peldrun.dev/schemas/skill-manifest-v1.json",
+  "title": "PELDRUN Skill Manifest",
+  "description": "Schema for manifest.json inside a PELDRUN skill package.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "version",
+    "name",
+    "description",
+    "execution"
   ],
-
-  "compatibility": {
-    "peldrun_min_version": "0.2.0"
-  },
-
-  "user_editable": true,
-
-  "limits": {
-    "max_instructions_bytes": 262144
-  },
-
-  "examples": [
-    {
-      "description": "Security-focused review",
-      "invocation": "/code_review security audit on auth.py",
-      "context": "User attached an authentication module.",
-      "expected_outcome": "Router selects security_audit; findings grouped by severity with payloads."
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+\\.\\d+(?:-[a-z0-9.\\-]+)?$",
+      "description": "Manifest schema version (semver). Major version MUST be 1."
     },
-    {
-      "description": "General review",
-      "invocation": "/code_review",
-      "context": "User attached a large file without specifying an aspect.",
-      "expected_outcome": "Router selects the most relevant sub-skill based on request content."
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_]{2,63}$",
+      "description": "Skill identifier: lowercase, 3-64 chars, [a-z0-9_]."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[a-z0-9.\\-]+)?$",
+      "description": "Skill release version (semver)."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "short_description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "store_description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "usage_notes": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "icon": {
+      "type": "string",
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9_./\\-]+\\.svg$"
+    },
+    "icon_svg": {
+      "type": "string",
+      "minLength": 32,
+      "maxLength": 32768
+    },
+    "brand_color": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$"
+    },
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "url": { "type": "string", "format": "uri", "maxLength": 500 },
+        "email": { "type": "string", "format": "email", "maxLength": 200 }
+      }
+    },
+    "publisher_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "trust": {
+      "type": "string",
+      "enum": ["verified", "community", "unverified"],
+      "default": "unverified"
+    },
+    "signature": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "license": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "license_url": { "type": "string", "format": "uri", "maxLength": 500 },
+    "homepage": { "type": "string", "format": "uri", "maxLength": 500 },
+    "docs_url": { "type": "string", "format": "uri", "maxLength": 500 },
+    "demo_url": { "type": ["string", "null"], "format": "uri", "maxLength": 500 },
+    "screenshots": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 500 },
+      "maxItems": 10
+    },
+    "release_date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "stability": {
+      "type": "string",
+      "enum": ["experimental", "beta", "stable", "deprecated"],
+      "default": "stable"
+    },
+    "changelog_url": { "type": "string", "format": "uri", "maxLength": 500 },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 32 },
+      "maxItems": 20,
+      "uniqueItems": true
+    },
+    "supported_languages": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
+      "maxItems": 10,
+      "uniqueItems": true
+    },
+    "i18n": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "short_description": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "store_description": { "type": "string", "minLength": 1, "maxLength": 4000 },
+          "usage_notes": { "type": "string", "minLength": 1, "maxLength": 2000 }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "peldrun_min_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "peldrun_max_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "chat_invocable": { "type": "boolean", "default": true },
+        "agent_assignable": { "type": "boolean", "default": true },
+        "workflow_node": { "type": "boolean", "default": false }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["instructions"],
+          "default": "instructions"
+        },
+        "instructions_file": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.\\-]+\\.md$",
+          "default": "SKILL.md"
+        },
+        "references_dir": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.\\-]+/?$"
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_instructions_bytes": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 1048576,
+          "default": 262144
+        }
+      }
+    },
+    "sub_skills": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description", "instructions_file"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_]{2,63}$"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 500
+          },
+          "triggers": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1, "maxLength": 64 },
+            "maxItems": 20
+          },
+          "instructions_file": {
+            "type": "string",
+            "pattern": "^sub_skills/(?:[A-Za-z0-9_.\\-]+/)*[A-Za-z0-9_.\\-]+\\.md$"
+          },
+          "capabilities": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "exclusive": { "type": "boolean", "default": false }
+            }
+          }
+        }
+      }
+    },
+    "user_editable": {
+      "type": "boolean",
+      "default": true
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema": { "type": "object" },
+        "defaults": { "type": "object" },
+        "required": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "examples": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "description": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "invocation": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "context": { "type": "string", "maxLength": 1000 },
+          "expected_outcome": { "type": "string", "maxLength": 1000 }
+        }
+      }
+    },
+    "deprecated": { "type": "boolean", "default": false },
+    "deprecation_message": { "type": ["string", "null"], "maxLength": 500 },
+    "replaces": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_]{2,63}$" },
+      "maxItems": 10,
+      "uniqueItems": true
+    },
+    "replaced_by": {
+      "type": ["string", "null"],
+      "pattern": "^[a-z0-9][a-z0-9_]{2,63}$"
     }
-  ]
+  }
 }
