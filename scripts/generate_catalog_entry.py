@@ -119,13 +119,6 @@ def build_catalog_item(
     # Optional fields
     if "display_name" in manifest:
         item["display_name"] = manifest["display_name"]
-
-    if "short_description" in manifest:
-        item["short_description"] = manifest["short_description"]
-
-    if "store_description" in manifest:
-        item["store_description"] = manifest["store_description"]
-
     if "icon_svg" in manifest:
         item["icon"] = manifest["icon_svg"]
         item["icon_type"] = "svg"

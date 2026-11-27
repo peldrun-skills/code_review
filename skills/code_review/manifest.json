@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "id": "code_review",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "name": "Code Review",
   "display_name": "Code Review",
   "icon_svg": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor'><path d='M9 12l2 2 4-4'/></svg>",
